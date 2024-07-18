@@ -1,4 +1,4 @@
-rootProject.name = 'cowanser'
+rootProject.name = 'cowanser-service'
 include 'core'
 include 'api'
 include 'bo'
