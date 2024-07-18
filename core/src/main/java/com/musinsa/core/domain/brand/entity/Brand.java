@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.Comment;
 
 import com.musinsa.core.domain.BaseEntity;
+import com.musinsa.core.domain.brand.dto.CreateBrand;
 import com.musinsa.core.domain.product.entity.Product;
 
 import jakarta.persistence.Column;
@@ -32,10 +33,16 @@ public class Brand extends BaseEntity {
     private Long id;
 
     @Comment(value = "브랜드 이름")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand")
     List<Product> products = new ArrayList<>();
+
+    public static Brand of(CreateBrand createBrand) {
+        return Brand.builder()
+            .name(createBrand.getName())
+            .build();
+    }
 }
