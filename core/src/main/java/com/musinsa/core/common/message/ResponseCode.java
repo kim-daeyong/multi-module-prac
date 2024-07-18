@@ -21,9 +21,14 @@ public enum ResponseCode {
     , INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "000008","시스템 오류")
     , INTERNAL_SERVICE_UNAVAILABLE_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "000009","Service Unavailable")
     , JSON_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "0000010","Json 파싱 에러")
+    , BAD_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "000011","잘못된 요청입니다.")
 
     // 브랜드
     , EXIST_BRAND_NAME_EXCEPTION(HttpStatus.CONFLICT, "011001","이미 존재하는 브랜드 이름입니다.")
+    , NOT_FOUND_BRAND_EXCEPTION(HttpStatus.BAD_REQUEST, "011002","존재하지않는 브랜드입니다.")
+
+    // 카테고리
+    , NOT_FOUND_CATEGORY_EXCEPTION(HttpStatus.BAD_REQUEST, "012001","존재하지않는 카테고리입니다.")
 
     ;
     private final HttpStatus status;

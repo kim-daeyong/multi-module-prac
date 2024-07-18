@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+
 import com.musinsa.bo.api.domain.brand.service.BrandService;
 import com.musinsa.core.common.exception.custom.DuplicateElementException;
 import com.musinsa.core.common.message.ResponseCode;
@@ -21,6 +23,9 @@ import com.musinsa.core.domain.brand.repository.BrandRepository;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@TestPropertySource(properties = {
+    "spring.sql.init.mode=never"
+})
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @SpringBootTest
 public class BrandIntegrationTest {

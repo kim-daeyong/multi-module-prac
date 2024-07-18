@@ -5,14 +5,14 @@ import com.musinsa.core.common.message.ResponseCode;
 
 import lombok.Getter;
 
-@Getter
-public class DuplicateElementException extends ApiException {
+@Getter 
+public class NotFoundException extends ApiException {
 
-    public DuplicateElementException(ResponseCode err) {
+    public NotFoundException(ResponseCode err) {
         super(err);
     }
 
-    public DuplicateElementException(ResponseCode err, String message) {
+    public NotFoundException(ResponseCode err, String message) {
         super(err, message);
     }
 }

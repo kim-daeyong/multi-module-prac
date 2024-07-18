@@ -7,6 +7,7 @@ import org.hibernate.annotations.Comment;
 import com.musinsa.core.domain.BaseEntity;
 import com.musinsa.core.domain.brand.entity.Brand;
 import com.musinsa.core.domain.category.entity.Category;
+import com.musinsa.core.domain.product.dto.CreateProduct;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@Table(name = "products", indexes = {
+@Table(name = "product", indexes = {
     @Index(name = "idx_brand_id", columnList = "brand_id"),
     @Index(name = "idx_category_id", columnList = "category_id"),
     @Index(name = "idx_price", columnList = "price")
@@ -53,5 +54,14 @@ public class Product extends BaseEntity {
     @Comment(value = "가격")
     @Column(nullable = false)
     private BigDecimal price;
+
+    public static Product of(CreateProduct createProduct) {
+        return Product.builder()
+            .name(createProduct.getName())
+            .price(createProduct.getPrice())
+            .brand(createProduct.getBrand())
+            .category(createProduct.getCategory())
+            .build();
+    }
     
 }

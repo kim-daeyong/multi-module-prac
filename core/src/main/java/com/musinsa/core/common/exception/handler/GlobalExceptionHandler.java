@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
                 .body(ErrorMessage.builder()
                         .resultUri(request.getRequestURI())
                         .resultCode(ResponseCode.RUNTIME_EXCEPTION.getCode())
-                        .resultMsg(ResponseCode.RUNTIME_EXCEPTION.getMessage())
+                        .resultMsg(ResponseCode.BAD_REQUEST_EXCEPTION.getMessage())
                         .resultDt(LocalDateTime.now())
                         .build());
     }
@@ -70,11 +70,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> exceptionHandler(HttpServletRequest request, final MissingServletRequestParameterException e) {
         log.warn("{}", e.getMessage());
         return ResponseEntity
-                .status(ResponseCode.RUNTIME_EXCEPTION.getStatus())
+                .status(ResponseCode.BAD_REQUEST_EXCEPTION.getStatus())
                 .body(ErrorMessage.builder()
                         .resultUri(request.getRequestURI())
-                        .resultCode(ResponseCode.RUNTIME_EXCEPTION.getCode())
-                        .resultMsg(ResponseCode.RUNTIME_EXCEPTION.getMessage())
+                        .resultCode(ResponseCode.BAD_REQUEST_EXCEPTION.getCode())
+                        .resultMsg(ResponseCode.BAD_REQUEST_EXCEPTION.getMessage())
                         .resultDt(LocalDateTime.now())
                         .build());
     }
@@ -100,10 +100,10 @@ public class GlobalExceptionHandler {
         }
         log.warn("{}", e.getMessage());
         return ResponseEntity
-                .status(ResponseCode.RUNTIME_EXCEPTION.getStatus())
+                .status(ResponseCode.BAD_REQUEST_EXCEPTION.getStatus())
                 .body(ErrorMessage.builder()
                         .resultUri(request.getRequestURI())
-                        .resultCode(ResponseCode.RUNTIME_EXCEPTION.getCode())
+                        .resultCode(ResponseCode.BAD_REQUEST_EXCEPTION.getCode())
                         .resultMsg(message.toString())
                         .resultDt(LocalDateTime.now())
                         .build());
