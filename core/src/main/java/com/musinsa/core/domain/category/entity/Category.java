@@ -33,7 +33,7 @@ public class Category extends BaseEntity {
     private Long id;
 
     @Comment(value = "카테고리 이름")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
     
     @Builder.Default
