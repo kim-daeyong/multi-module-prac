@@ -2,12 +2,14 @@ package com.musinsa.core.domain.product.entity;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.hibernate.annotations.Comment;
 
 import com.musinsa.core.domain.BaseEntity;
 import com.musinsa.core.domain.brand.entity.Brand;
 import com.musinsa.core.domain.category.entity.Category;
 import com.musinsa.core.domain.product.dto.CreateProduct;
+import com.musinsa.core.domain.product.dto.UpdateProduct;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +37,7 @@ public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment(value = "id")
-    private Integer id;
+    private Long id;
 
     @Comment(value = "상품 이름")
     @Column(nullable = false)
@@ -62,6 +64,42 @@ public class Product extends BaseEntity {
             .brand(createProduct.getBrand())
             .category(createProduct.getCategory())
             .build();
+    }
+
+    public void updateProduct(UpdateProduct updateProduct) {
+        updateBrand(updateProduct.getBrand());
+        updateCategory(updateProduct.getCategory());
+        updateName(updateProduct.getName());
+        updatePrice(updateProduct.getPrice());
+    }
+
+    public boolean isSameBrandId(Long brandId) {
+        return this.brand.getId() == brandId;
+    }
+
+    public boolean isSameCategoryId(Long categoryId) {
+        return this.category.getId() == categoryId;
+
+    }
+
+    public void updateBrand(Brand brand) {
+        if (ObjectUtils.isNotEmpty(brand)) {
+            this.brand = brand;
+        }
+    }
+
+    public void updateCategory(Category category) {
+        if (ObjectUtils.isNotEmpty(category)) {
+            this.category = category;
+        }
+    }
+
+    public void updatePrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
     }
     
 }

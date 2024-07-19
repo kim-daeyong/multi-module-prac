@@ -33,10 +33,11 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseMessage<ProductDtoWithBrandAndCategory> updateMethodName(@PathVariable Long id
+    public ResponseMessage<ProductDtoWithBrandAndCategory> updateMethodName(
+        @PathVariable Long id
         , @RequestBody @Valid UpdateProductRequest updateProductRequest) {
         
-        return new ResponseMessage<>(productService.updateProduct(updateProductRequest));
+        return new ResponseMessage<>(productService.updateProduct(id, updateProductRequest));
     }
 
     @DeleteMapping("")

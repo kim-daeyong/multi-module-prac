@@ -8,7 +8,7 @@ import com.musinsa.core.domain.product.dto.ProductDtoWithBrandAndCategory;
 public interface ProductService {
     ProductDtoWithBrandAndCategory createProduct(CreateProductRequest createProductRequest);
 
-    ProductDtoWithBrandAndCategory updateProduct(UpdateProductRequest updateProductRequest);
+    ProductDtoWithBrandAndCategory updateProduct(Long id, UpdateProductRequest updateProductRequest);
 
     void deleteProduct(DeleteProductRequest deleteProductRequest);
 }

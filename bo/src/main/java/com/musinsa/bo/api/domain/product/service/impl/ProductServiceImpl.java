@@ -14,6 +14,7 @@ import com.musinsa.core.domain.category.entity.Category;
 import com.musinsa.core.domain.category.repository.CategoryRepository;
 import com.musinsa.core.domain.product.dto.CreateProduct;
 import com.musinsa.core.domain.product.dto.ProductDtoWithBrandAndCategory;
+import com.musinsa.core.domain.product.dto.UpdateProduct;
 import com.musinsa.core.domain.product.entity.Product;
 import com.musinsa.core.domain.product.mapper.ProductMapper;
 import com.musinsa.core.domain.product.repository.ProductRepository;
@@ -47,9 +48,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDtoWithBrandAndCategory updateProduct(UpdateProductRequest updateProductRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+    public ProductDtoWithBrandAndCategory updateProduct(Long id, UpdateProductRequest updateProductRequest) {
+        Product product = productRepository.findAllByIdWithBrandAndCategory(id)
+            .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND_PRODUCT_EXCEPTION));
+
+        UpdateProduct updateProduct = UpdateProduct.builder()
+                                        .name(updateProductRequest.getName())
+                                        .price(updateProductRequest.getPrice())
+                                        .build();
+
+        if (!product.isSameBrandId(updateProductRequest.getBrandId())) {
+            Brand brand = brandRepository.findById(updateProductRequest.getBrandId())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND_BRAND_EXCEPTION));
+
+                updateProduct.updateBrand(brand);
+        }
+
+        if (!product.isSameCategoryId(updateProductRequest.getCategoryId())) {
+            Category category = categoryRepository.findById(updateProductRequest.getCategoryId())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND_CATEGORY_EXCEPTION));
+            
+            updateProduct.updateCategory(category);
+        }
+
+        product.updateProduct(updateProduct);
+
+        return productMapper.asDtoWithBrandAndCategory(productRepository.save(product));        
     }
 
     @Override

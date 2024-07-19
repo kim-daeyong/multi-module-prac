@@ -29,6 +29,9 @@ public enum ResponseCode {
 
     // 카테고리
     , NOT_FOUND_CATEGORY_EXCEPTION(HttpStatus.BAD_REQUEST, "012001","존재하지않는 카테고리입니다.")
+    
+    // 상품
+    , NOT_FOUND_PRODUCT_EXCEPTION(HttpStatus.BAD_REQUEST, "013001","존재하지않는 상품입니다.")
 
     ;
     private final HttpStatus status;
