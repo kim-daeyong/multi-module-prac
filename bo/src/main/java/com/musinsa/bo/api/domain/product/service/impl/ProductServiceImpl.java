@@ -3,6 +3,8 @@ package com.musinsa.bo.api.domain.product.service.impl;
 import org.springframework.stereotype.Service;
 
 import com.musinsa.bo.api.domain.product.dto.request.CreateProductRequest;
+import com.musinsa.bo.api.domain.product.dto.request.DeleteProductRequest;
+import com.musinsa.bo.api.domain.product.dto.request.UpdateProductRequest;
 import com.musinsa.bo.api.domain.product.service.ProductService;
 import com.musinsa.core.common.exception.custom.NotFoundException;
 import com.musinsa.core.common.message.ResponseCode;
@@ -42,6 +44,17 @@ public class ProductServiceImpl implements ProductService {
                                         .build());
 
         return productMapper.asDtoWithBrandAndCategory(productRepository.save(product));
+    }
+
+    @Override
+    public ProductDtoWithBrandAndCategory updateProduct(UpdateProductRequest updateProductRequest) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+    }
+
+    @Override
+    public void deleteProduct(DeleteProductRequest deleteProductRequest) {
+        productRepository.deleteAllByIdInBatch(deleteProductRequest.getIds());
     }
     
 }
