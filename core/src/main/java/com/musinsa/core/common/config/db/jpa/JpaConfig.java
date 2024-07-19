@@ -1,4 +1,4 @@
-package com.musinsa.core.common.config.jpa;
+package com.musinsa.core.common.config.db.jpa;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
