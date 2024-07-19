@@ -15,6 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.musinsa.bo.api.domain.product.dto.request.CreateProductRequest;
 import com.musinsa.bo.api.domain.product.dto.request.DeleteProductRequest;
+import com.musinsa.bo.api.domain.product.dto.request.UpdateProductRequest;
 import com.musinsa.bo.api.domain.product.service.ProductService;
 import com.musinsa.core.common.exception.custom.NotFoundException;
 import com.musinsa.core.common.message.ResponseCode;
@@ -155,5 +156,46 @@ public class ProductIntegrationTest {
 
         // Then
         assertFalse(productRepository.existsById(result.getId()));
+    }
+
+    @Test
+    void updateProductTest() {
+        // Given
+        Brand brand = brandRepository.save(Brand.builder()
+                                                .name("test")
+                                                .build());
+        Brand brand2 = brandRepository.save(Brand.builder()
+                                                .name("test2")
+                                                .build());
+        Category category = categoryRepository.save(Category.builder()
+                                                                .name("test")
+                                                                .build());
+
+        CreateProductRequest request = CreateProductRequest.builder()
+                                            .brandId(brand.getId())
+                                            .categoryId(category.getId())
+                                            .name("test")
+                                            .price(BigDecimal.valueOf(3000))
+                                            .build();
+
+        ProductDtoWithBrandAndCategory productDto = productService.createProduct(request);
+
+        UpdateProductRequest updateProductRequest = UpdateProductRequest.builder()
+                                                        .brandId(2L)
+                                                        .categoryId(1L)
+                                                        .name("test1")
+                                                        .price(BigDecimal.ZERO)
+                                                        .build();
+        
+        // When
+        ProductDtoWithBrandAndCategory result = productService.updateProduct(productDto.getId(), updateProductRequest);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(productDto.getId(), result.getId());
+        assertEquals("test1", result.getName());
+        assertEquals(BigDecimal.ZERO, result.getPrice());
+        assertEquals(brand2.getId(), result.getBrand().getId());
+        assertEquals(category.getId(), result.getCategory().getId());
     }
 }

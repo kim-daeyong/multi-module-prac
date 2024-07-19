@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.musinsa.bo.api.domain.product.dto.request.CreateProductRequest;
 import com.musinsa.bo.api.domain.product.dto.request.DeleteProductRequest;
+import com.musinsa.bo.api.domain.product.dto.request.UpdateProductRequest;
 import com.musinsa.bo.api.domain.product.service.impl.ProductServiceImpl;
 import com.musinsa.core.common.exception.custom.NotFoundException;
 import com.musinsa.core.common.message.ResponseCode;
@@ -53,7 +54,10 @@ public class ProductUnitTest {
     @Test
     void createProductTest() {
         // Given
-        CreateProductRequest request = CreateProductRequest.builder().brandId(1l).categoryId(1l).build();
+        CreateProductRequest request = CreateProductRequest.builder()
+                                        .brandId(1l)
+                                        .categoryId(1l)
+                                        .build();
         Brand brand = Brand.builder().build();
         Category category = Category.builder().build();
         Product product = Product.builder().build();
@@ -79,7 +83,10 @@ public class ProductUnitTest {
     @Test
     void createProductTest_not_exist_brand() {
         // Given
-        CreateProductRequest request = CreateProductRequest.builder().brandId(1L).categoryId(1L).build();
+        CreateProductRequest request = CreateProductRequest.builder()
+                                        .brandId(1L)
+                                        .categoryId(1L)
+                                        .build();
 
         when(brandRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -100,9 +107,12 @@ public class ProductUnitTest {
     @Test
     void createProductTest_not_exist_category() {
         // Given
-        CreateProductRequest request = CreateProductRequest.builder().brandId(1L).categoryId(2L).build();
+        CreateProductRequest request = CreateProductRequest.builder()
+                                        .brandId(1L)
+                                        .categoryId(2L)
+                                        .build();
+
         Brand brand = Brand.builder().build();
-        Category category = Category.builder().build();
 
         when(brandRepository.findById(anyLong())).thenReturn(Optional.of(brand));
         when(categoryRepository.findById(2L)).thenReturn(Optional.empty());
@@ -133,6 +143,126 @@ public class ProductUnitTest {
 
         // Then
         verify(productRepository, times(1)).deleteAllByIdInBatch(deleteProductRequest.getIds());
+    }
+
+    @Test
+    void updateProductTest() {
+        // Given
+        UpdateProductRequest request = UpdateProductRequest.builder()
+                                        .brandId(1L)
+                                        .categoryId(1L)
+                                        .build();
+        Brand brand = Brand.builder()
+                        .id(1L)
+                        .build();
+        Category category = Category.builder()
+                            .id(1L)
+                            .build();
+        Product product = Product.builder()
+                            .brand(brand)
+                            .category(category)
+                            .build();
+        ProductDtoWithBrandAndCategory dto = ProductDtoWithBrandAndCategory.builder().build();
+
+        when(productRepository.findAllByIdWithBrandAndCategory(any(Long.class)))
+            .thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class)))
+            .thenReturn(product);
+        when(productMapper.asDtoWithBrandAndCategory(any(Product.class)))
+            .thenReturn(dto);
+
+        // When
+        ProductDtoWithBrandAndCategory result = productService.updateProduct(1L, request);
+
+        // Then
+        assertNotNull(result);
+        verify(brandRepository, never()).findById(anyLong());
+        verify(categoryRepository, never()).findById(anyLong());
+        verify(productRepository, times(1)).save(any(Product.class));
+        verify(productMapper, times(1)).asDtoWithBrandAndCategory(product);
+    }
+
+    @Test
+    void updateProductTest_update_brand() {
+        // Given
+        UpdateProductRequest request = UpdateProductRequest.builder()
+                                        .brandId(2L)
+                                        .categoryId(1L)
+                                        .build();
+        Brand oldBrand = Brand.builder()
+                            .id(1L)
+                            .build();
+        Brand brand = Brand.builder()
+                        .id(2L)
+                        .build();
+        Category category = Category.builder()
+                            .id(1L)
+                            .build();
+        Product product = Product.builder()
+                            .brand(oldBrand)
+                            .category(category).build();
+        ProductDtoWithBrandAndCategory dto = ProductDtoWithBrandAndCategory.builder().build();
+
+        when(productRepository.findAllByIdWithBrandAndCategory(any(Long.class)))
+            .thenReturn(Optional.of(product));
+        when(brandRepository.findById(any(Long.class)))
+            .thenReturn(Optional.of(brand));
+        when(productRepository.save(any(Product.class)))
+            .thenReturn(product);
+        when(productMapper.asDtoWithBrandAndCategory(any(Product.class)))
+            .thenReturn(dto);
+
+        // When
+        ProductDtoWithBrandAndCategory result = productService.updateProduct(1L, request);
+
+        // Then
+        assertNotNull(result);
+        verify(brandRepository, times(1)).findById(anyLong());
+        verify(categoryRepository, never()).findById(anyLong());
+        verify(productRepository, times(1)).save(any(Product.class));
+        verify(productMapper, times(1)).asDtoWithBrandAndCategory(product);
+    }
+
+    @Test
+    void updateProductTest_update_category() {
+        // Given
+        UpdateProductRequest request = UpdateProductRequest.builder()
+                                        .brandId(1L)
+                                        .categoryId(2L)
+                                        .build();
+        Brand brand = Brand.builder()
+                        .id(1L)
+                        .build();
+        Category oldCategory = Category.builder()
+                                .id(1L)
+                                .build();
+        Category category = Category.builder()
+                                .id(2L)
+                                .build();
+        Product product = Product.builder()
+                            .brand(brand)
+                            .category(oldCategory)
+                            .build();
+        ProductDtoWithBrandAndCategory dto = ProductDtoWithBrandAndCategory.builder().build();
+
+        when(productRepository.findAllByIdWithBrandAndCategory(any(Long.class)))
+            .thenReturn(Optional.of(product));
+        when(categoryRepository.findById(any(Long.class)))
+            .thenReturn(Optional.of(category));
+        when(productRepository.save(any(Product.class)))
+            .thenReturn(product);
+        when(productMapper.asDtoWithBrandAndCategory(any(Product.class)))
+            .thenReturn(dto);
+
+        // When
+        ProductDtoWithBrandAndCategory result = productService.updateProduct(1L, request);
+
+        // Then
+        assertNotNull(result);
+        verify(brandRepository, never()).findById(anyLong());
+        verify(categoryRepository, times(1)).findById(anyLong());
+        verify(productRepository, times(1)).save(any(Product.class));
+        verify(productMapper, times(1)).asDtoWithBrandAndCategory(product);
     }
     
 }
