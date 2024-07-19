@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.musinsa.bo.api.domain.product.dto.request.CreateProductRequest;
+import com.musinsa.bo.api.domain.product.dto.request.DeleteProductRequest;
 import com.musinsa.bo.api.domain.product.service.impl.ProductServiceImpl;
 import com.musinsa.core.common.exception.custom.NotFoundException;
 import com.musinsa.core.common.message.ResponseCode;
@@ -117,6 +119,20 @@ public class ProductUnitTest {
         verify(categoryRepository).findById(2L);
         verify(productRepository, never()).save(any(Product.class));
         verify(productMapper, never()).asDtoWithBrandAndCategory(any(Product.class));
+    }
+
+    @Test
+    void deleteProductTest() {
+        // Given
+        DeleteProductRequest deleteProductRequest = DeleteProductRequest.builder()
+                                                        .ids(List.of(1l))
+                                                        .build();
+
+        // When
+        productService.deleteProduct(deleteProductRequest);
+
+        // Then
+        verify(productRepository, times(1)).deleteAllByIdInBatch(deleteProductRequest.getIds());
     }
     
 }
