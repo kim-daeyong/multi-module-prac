@@ -35,4 +35,7 @@ spring:
       port: 6379
       host: test-redis
       password: 1234
+  sql:
+    init:
+      mode: always
 

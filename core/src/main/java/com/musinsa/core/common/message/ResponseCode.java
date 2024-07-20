@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public enum ResponseCode {
-    SUCCESS(HttpStatus.OK,"0000","성공")
+    SUCCESS(HttpStatus.OK,"0000","success")
 
     // 공통
     , RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, "000001","Bad Request")
