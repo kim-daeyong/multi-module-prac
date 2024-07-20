@@ -1,13 +1,13 @@
 package com.musinsa.core.domain.product.repository.querydsl;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.musinsa.core.domain.product.dto.MinAndMaxPriceByCategoryResult;
 import com.musinsa.core.domain.product.dto.MinAndMaxPriceProductByCategory;
+import com.musinsa.core.domain.product.dto.CategoryMinPriceResult;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import static com.musinsa.core.domain.product.entity.QProduct.product;
 import static com.musinsa.core.domain.brand.entity.QBrand.brand;
@@ -77,6 +77,7 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
                 .values());
     }
 
+    @Override
     public MinAndMaxPriceByCategoryResult findMinMaxPriceByCategory(String categoryName) {
         List<MinAndMaxPriceProductByCategory> minPrices = factory.select(
                     Projections.constructor(MinAndMaxPriceProductByCategory.class,
@@ -115,4 +116,49 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
                 .maxPrice(maxPrice)
                 .build();
     }
+
+    @Override
+    public List<CategoryMinPriceResult> getAllCategoryMinPriceBrand(List<Long> targetCategories) {
+        List<Long> brandIds = factory.select(product.brand.id)
+                .from(product)
+                .where(product.category.id.in(targetCategories))
+                .groupBy(product.brand.id)
+                .having(product.category.id.countDistinct().eq(Long.valueOf(targetCategories.size())))
+                .fetch();
+
+        if (CollectionUtils.isEmpty(brandIds)) {
+            return new ArrayList<>();
+        }
+
+        List<CategoryMinPriceResult> temp = factory.select(
+                Projections.constructor(CategoryMinPriceResult.class,
+                        product.id,
+                        product.name,
+                        product.brand.id,
+                        product.brand.name,
+                        product.category.id,
+                        product.category.name,
+                        product.price.min()))
+                .from(product)
+                .join(product.category, category)
+                .join(product.brand, brand)
+                .where(product.brand.id.in(brandIds))
+                .groupBy(product.id, product.brand.id, product.category.id)
+                .fetch();
+
+        Map<Long, List<CategoryMinPriceResult>> productMap = temp.stream()
+                .collect(Collectors.groupingBy(CategoryMinPriceResult::getBrandId));
+
+        Long brandID =  temp.stream()
+                .collect(Collectors.groupingBy(CategoryMinPriceResult::getBrandId,
+                        Collectors.mapping(CategoryMinPriceResult::getPrice,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))))
+                .entrySet().stream()
+                .min(Map.Entry.comparingByValue(BigDecimal::compareTo))
+                .map(Map.Entry::getKey).get();
+
+        return productMap.get(brandID);
+    }
 }
+
+

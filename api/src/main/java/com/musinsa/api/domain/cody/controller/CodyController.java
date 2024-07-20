@@ -1,6 +1,7 @@
 package com.musinsa.api.domain.cody.controller;
 
 import com.musinsa.api.domain.cody.dto.response.MinAndMaxPriceProductByCategoryResponse;
+import com.musinsa.api.domain.cody.dto.response.AllCategoryMinPriceBrandResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,5 +26,10 @@ public class CodyController {
     @GetMapping("/category")
     public ResponseMessage<MinAndMaxPriceProductByCategoryResponse> getMinAndMaxPriceProductByCategory(@RequestParam @Valid String categoryName) {
         return new ResponseMessage<>(codyService.getMinAndMaxPriceProductByCategory(categoryName));
+    }
+
+    @GetMapping("/brand")
+    public ResponseMessage<AllCategoryMinPriceBrandResponse> getAllCategoryMinPriceBrand() {
+        return new ResponseMessage<>(codyService.getAllCategoryMinPriceBrand());
     }
 }
