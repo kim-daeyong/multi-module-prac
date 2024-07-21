@@ -8,7 +8,10 @@ import com.musinsa.core.domain.product.dto.MinAndMaxPriceByCategoryResult;
 import com.musinsa.core.domain.product.dto.MinAndMaxPriceProductByCategory;
 import com.musinsa.core.domain.product.dto.CategoryMinPriceResult;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+
+import static com.musinsa.core.common.constant.RedisCacheConstant.*;
 import static com.musinsa.core.domain.product.entity.QProduct.product;
 import static com.musinsa.core.domain.brand.entity.QBrand.brand;
 import static com.musinsa.core.domain.category.entity.QCategory.category;
@@ -29,6 +32,7 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
         this.factory = jpaQueryFactory;
     }
 
+    @Cacheable(value = PRODUCT_ALL, key = "#productId" ,cacheManager = "redisCacheManager")
     @Override
     public Optional<Product> findAllByIdWithBrandAndCategory(Long productId) {
         return Optional.ofNullable(from(product)
@@ -38,6 +42,7 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
                 .fetchOne());
     }
 
+    @Cacheable(value = CODY_CATEGORY_ALL_MIN_PRICE, cacheManager = "redisCacheManager")
     @Override
     public List<MinPriceProductPerCategory> getMinPriceProductPerCategory() {
         QProduct subProduct = new QProduct("sp");
@@ -77,6 +82,7 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
                 .values());
     }
 
+    @Cacheable(value = CODY_CATEGORY_MIN_MAX, key = "#categoryName", cacheManager = "redisCacheManager")
     @Override
     public MinAndMaxPriceByCategoryResult findMinMaxPriceByCategory(String categoryName) {
         List<MinAndMaxPriceProductByCategory> minPrices = factory.select(
@@ -117,6 +123,7 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
                 .build();
     }
 
+    @Cacheable(value = CODY_BRAND_ALL_CATEGORY_MIN_PRICE, cacheManager = "redisCacheManager")
     @Override
     public List<CategoryMinPriceResult> getAllCategoryMinPriceBrand(List<Long> targetCategories) {
         List<Long> brandIds = factory.select(product.brand.id)

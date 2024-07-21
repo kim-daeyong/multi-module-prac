@@ -1,5 +1,6 @@
 package com.musinsa.bo.api.domain.product.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import com.musinsa.bo.api.domain.product.dto.request.CreateProductRequest;
@@ -21,6 +22,8 @@ import com.musinsa.core.domain.product.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.musinsa.core.common.constant.RedisCacheConstant.*;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -29,6 +32,15 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
 
+    @CacheEvict(
+            value = {
+                    PRODUCT_ALL,
+                    CODY_CATEGORY_ALL_MIN_PRICE,
+                    CODY_CATEGORY_MIN_MAX,
+                    CODY_BRAND_ALL_CATEGORY_MIN_PRICE
+            },
+            cacheManager = "redisCacheManager",
+            allEntries = true)
     @Override
     public ProductDtoWithBrandAndCategory createProduct(CreateProductRequest createProductRequest) {
         Brand brand = brandRepository.findById(createProductRequest.getBrandId())
@@ -47,6 +59,15 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.asDtoWithBrandAndCategory(productRepository.save(product));
     }
 
+    @CacheEvict(
+            value = {
+                    PRODUCT_ALL,
+                    CODY_CATEGORY_ALL_MIN_PRICE,
+                    CODY_CATEGORY_MIN_MAX,
+                    CODY_BRAND_ALL_CATEGORY_MIN_PRICE
+            },
+            cacheManager = "redisCacheManager",
+            allEntries = true)
     @Override
     public ProductDtoWithBrandAndCategory updateProduct(Long id, UpdateProductRequest updateProductRequest) {
         Product product = productRepository.findAllByIdWithBrandAndCategory(id)
@@ -76,6 +97,15 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.asDtoWithBrandAndCategory(productRepository.save(product));        
     }
 
+    @CacheEvict(
+            value = {
+                    PRODUCT_ALL,
+                    CODY_CATEGORY_ALL_MIN_PRICE,
+                    CODY_CATEGORY_MIN_MAX,
+                    CODY_BRAND_ALL_CATEGORY_MIN_PRICE
+            },
+            cacheManager = "redisCacheManager",
+            allEntries = true)
     @Override
     public void deleteProduct(DeleteProductRequest deleteProductRequest) {
         productRepository.deleteAllByIdInBatch(deleteProductRequest.getIds());
