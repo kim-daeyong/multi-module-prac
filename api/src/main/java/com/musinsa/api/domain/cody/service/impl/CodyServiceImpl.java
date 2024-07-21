@@ -6,6 +6,7 @@ import java.util.List;
 import com.musinsa.api.domain.cody.dto.response.MinAndMaxPriceProductByCategoryResponse;
 import com.musinsa.api.domain.cody.dto.response.AllCategoryMinPriceBrandResponse;
 import com.musinsa.api.domain.cody.dto.response.CategoryMinPriceBrand;
+import com.musinsa.core.common.constant.CodyConstant;
 import com.musinsa.core.domain.product.dto.MinAndMaxPriceByCategoryResult;
 import com.musinsa.core.domain.product.dto.CategoryMinPriceResult;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,13 @@ import com.musinsa.core.domain.product.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.musinsa.core.common.constant.CodyConstant.ALL_CATEGORY_FOR_TARGET;
+
 @Service
 @RequiredArgsConstructor
 public class CodyServiceImpl implements CodyService {
     private final ProductRepository productRepository;
 
-    private final List<Long> TARGET_CATEGORY = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L);
-    
     @Override
     public MinPriceProductsPerCategoryRespose getMinPriceProductsPerCategory() {
         List<MinPriceProductPerCategory> list = productRepository.getMinPriceProductPerCategory();
@@ -38,7 +39,7 @@ public class CodyServiceImpl implements CodyService {
 
     @Override
     public AllCategoryMinPriceBrandResponse getAllCategoryMinPriceBrand() {
-        List<CategoryMinPriceResult> result = productRepository.getAllCategoryMinPriceBrand(TARGET_CATEGORY);
+        List<CategoryMinPriceResult> result = productRepository.getAllCategoryMinPriceBrand(ALL_CATEGORY_FOR_TARGET);
 
         return AllCategoryMinPriceBrandResponse.builder()
                 .brand(result.getFirst().getBrandName())
