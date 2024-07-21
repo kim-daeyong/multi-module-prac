@@ -1,7 +1,5 @@
 package com.musinsa.core.common.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -6,7 +6,6 @@ import java.util.List;
 import com.musinsa.api.domain.cody.dto.response.MinAndMaxPriceProductByCategoryResponse;
 import com.musinsa.api.domain.cody.dto.response.AllCategoryMinPriceBrandResponse;
 import com.musinsa.api.domain.cody.dto.response.CategoryMinPriceBrand;
-import com.musinsa.core.common.constant.CodyConstant;
 import com.musinsa.core.domain.product.dto.MinAndMaxPriceByCategoryResult;
 import com.musinsa.core.domain.product.dto.CategoryMinPriceResult;
 import org.springframework.stereotype.Service;
