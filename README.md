@@ -45,6 +45,12 @@
 * 필수 사항
     * docker 설치
     * docker compose 설치
+* build
+```shell
+$ ./gradlew api:build
+
+$ ./gradlew bo:build
+```
 * 실행 방법
 ```shell
 

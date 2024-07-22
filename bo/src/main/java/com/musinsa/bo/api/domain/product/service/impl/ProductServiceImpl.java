@@ -34,7 +34,6 @@ public class ProductServiceImpl implements ProductService {
 
     @CacheEvict(
             value = {
-                    PRODUCT_ALL,
                     CODY_CATEGORY_ALL_MIN_PRICE,
                     CODY_CATEGORY_MIN_MAX,
                     CODY_BRAND_ALL_CATEGORY_MIN_PRICE
@@ -61,7 +60,6 @@ public class ProductServiceImpl implements ProductService {
 
     @CacheEvict(
             value = {
-                    PRODUCT_ALL,
                     CODY_CATEGORY_ALL_MIN_PRICE,
                     CODY_CATEGORY_MIN_MAX,
                     CODY_BRAND_ALL_CATEGORY_MIN_PRICE
@@ -99,7 +97,6 @@ public class ProductServiceImpl implements ProductService {
 
     @CacheEvict(
             value = {
-                    PRODUCT_ALL,
                     CODY_CATEGORY_ALL_MIN_PRICE,
                     CODY_CATEGORY_MIN_MAX,
                     CODY_BRAND_ALL_CATEGORY_MIN_PRICE

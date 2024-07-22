@@ -7,12 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.musinsa.bo.config.redis.TestEmbeddedRedisConfig;
+import com.musinsa.bo.config.redis.TestRedisConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import com.musinsa.bo.api.domain.product.dto.request.CreateProductRequest;
@@ -32,6 +36,8 @@ import com.musinsa.core.domain.product.repository.querydsl.ProductQuerydslReposi
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {TestRedisConfig.class, TestEmbeddedRedisConfig.class})
 @TestPropertySource(properties = {
     "spring.sql.init.mode=never"
 })
@@ -46,9 +52,6 @@ public class ProductIntegrationTest {
 
     @Autowired
     private ProductRepository productRepository;
-
-    // @Autowired
-    // private ProductQuerydslRepository productQuerydslRepository;
 
     @Autowired
     private ProductMapper productMapper;
@@ -184,8 +187,8 @@ public class ProductIntegrationTest {
         ProductDtoWithBrandAndCategory productDto = productService.createProduct(request);
 
         UpdateProductRequest updateProductRequest = UpdateProductRequest.builder()
-                                                        .brandId(2L)
-                                                        .categoryId(1L)
+                                                        .brandId(brand2.getId())
+                                                        .categoryId(category.getId())
                                                         .name("test1")
                                                         .price(BigDecimal.ZERO)
                                                         .build();

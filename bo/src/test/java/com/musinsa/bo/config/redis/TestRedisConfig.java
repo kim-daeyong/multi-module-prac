@@ -1,16 +1,13 @@
-package com.musinsa.core.common.config.redis;
+package com.musinsa.bo.config.redis;
 
 import io.lettuce.core.RedisClient;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -19,28 +16,21 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-@Profile("!test")
+@Profile("test")
 @EnableCaching
-@Configuration
-@RequiredArgsConstructor
-public class RedisConfig {
-    @Value("${spring.data.redis.host}")
-    private String host;
-
-    @Value("${spring.data.redis.port}")
-    private int port;
-
+@TestConfiguration
+public class TestRedisConfig {
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    public RedisConnectionFactory testRedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(host);
-        redisStandaloneConfiguration.setPort(port);
+        redisStandaloneConfiguration.setHostName("localhost");
+        redisStandaloneConfiguration.setPort(6480);
 
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
-    @Bean
-    public RedisCacheManager redisCacheManager() {
+    @Bean(name = "redisCacheManager")
+    public RedisCacheManager testRedisCacheManager() {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
@@ -53,13 +43,13 @@ public class RedisConfig {
                 .entryTtl(Duration.ofDays(1));
 
         return RedisCacheManager.RedisCacheManagerBuilder
-                .fromConnectionFactory(redisConnectionFactory())
+                .fromConnectionFactory(testRedisConnectionFactory())
                 .cacheDefaults(redisCacheConfiguration)
                 .build();
     }
 
     @Bean(name = "lettuceRedisClient")
     public RedisClient redisClient() {
-        return RedisClient.create("redis://" + host + ":" + port);
+        return RedisClient.create("redis://localhost:6480");
     }
 }

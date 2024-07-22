@@ -4,20 +4,26 @@ import com.musinsa.api.domain.cody.dto.response.AllCategoryMinPriceBrandResponse
 import com.musinsa.api.domain.cody.dto.response.MinAndMaxPriceProductByCategoryResponse;
 import com.musinsa.api.domain.cody.dto.response.MinPriceProductsPerCategoryRespose;
 import com.musinsa.api.domain.cody.service.CodyService;
+import com.musinsa.config.redis.TestEmbeddedRedisConfig;
+import com.musinsa.config.redis.TestRedisConfig;
 import com.musinsa.core.domain.product.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {TestRedisConfig.class, TestEmbeddedRedisConfig.class})
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@SpringBootTest
+@SpringBootTest()
 public class CodyServiceTest {
 
     @Autowired

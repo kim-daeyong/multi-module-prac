@@ -3,12 +3,16 @@ package com.musinsa.bo.doamin.brand.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.musinsa.bo.config.redis.TestEmbeddedRedisConfig;
+import com.musinsa.bo.config.redis.TestRedisConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import com.musinsa.bo.api.domain.brand.service.BrandService;
@@ -21,6 +25,8 @@ import com.musinsa.core.domain.brand.repository.BrandRepository;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {TestRedisConfig.class, TestEmbeddedRedisConfig.class})
 @TestPropertySource(properties = {
     "spring.sql.init.mode=never"
 })

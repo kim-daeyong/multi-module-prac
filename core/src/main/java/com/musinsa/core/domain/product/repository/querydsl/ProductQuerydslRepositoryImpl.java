@@ -32,7 +32,6 @@ public class ProductQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
         this.factory = jpaQueryFactory;
     }
 
-    @Cacheable(value = PRODUCT_ALL, key = "#productId" ,cacheManager = "redisCacheManager")
     @Override
     public Optional<Product> findAllByIdWithBrandAndCategory(Long productId) {
         return Optional.ofNullable(from(product)
